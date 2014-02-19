@@ -73,7 +73,7 @@ def main():
         else:
             s2path = os.environ['S2PATH']
             s2arch = os.environ['S2ARCH']
-        includeDirs.append(s2path)
+        includeDirs.append(os.path.join(s2path,'src'))
         dylibPath = os.path.join(s2path,s2arch)
         dylibFile = os.path.join(dylibPath,'libs2plot'+dylibExt)
         if not os.path.exists(dylibFile):
