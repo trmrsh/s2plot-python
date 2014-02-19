@@ -115,6 +115,7 @@ static PyObject *s2plot_s2funxyr(PyObject *self, PyObject *args);
 static PyObject *s2plot_s2funxzr(PyObject *self, PyObject *args);
 static PyObject *s2plot_s2funyzr(PyObject *self, PyObject *args);
 static PyObject *s2plot_s2funuv(PyObject *self, PyObject *args);
+static PyObject *s2plot_s2funuva(PyObject *self, PyObject *args);
 // IMAGES/SURFACES
 static PyObject *s2plot_s2surp(PyObject *self, PyObject *args);
 static PyObject *s2plot_s2surpa(PyObject *self, PyObject *args);

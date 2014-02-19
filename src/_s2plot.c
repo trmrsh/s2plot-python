@@ -111,6 +111,7 @@ static PyMethodDef S2PlotMethods[] = {
     {"s2funxzr", s2plot_s2funxzr, METH_VARARGS, "s2funxzr(fxz, nx, nz, xmin, xmax, zmin, zmax, ctl, rmin, rmax)\n\nDraw surface as per s2funxz, but with explicit settings for the colour range mapping between rmin and rmax."},
     {"s2funyzr", s2plot_s2funyzr, METH_VARARGS, "s2funyzr(fyz, ny, nz, ymin, ymax, zmin, zmax, ctl, rmin, rmax)\n\nDraw surface as per s2funyz, but with explicit settings for the colour range mapping between rmin and rmax."},
     {"s2funuv", s2plot_s2funuv, METH_VARARGS, "s2funuv(fx, fy, fz, fcol, umin, umax, uDIV, vmin, vmax, vDIV)\n\nPlot the parametric function (generally a surface) defined by { fx(u,v), fy(u,v), fz(u,v) } (each return a float given 2 floats), coloured by fcol(u,v) with fcol required to fall in the range [0,1].  fcol is then mapped to the current colormap index range (set with s2scir). The range of u and v values are specified by umin,umax and vmin, vmax, and the number of divisions by uDIV and vDIV."},
+    {"s2funuva", s2plot_s2funuva, METH_VARARGS, "s2funuva(fx, fy, fz, fcol, trans, falpha, umin, umax, uDIV, vmin, vmax, vDIV)\n\nPlot the parametric function (generally a surface) defined by { (fx(u,v), fy(u,v), fz(u,v) }, coloured by fcol(u,v) with fcol required to fall in the range [0,1]. fcol is then mapped to the current colormap index range (set with s2scir). Transparency is applied to the surface with falpha(u,v), defining the opacity in the range [0,1]. The range of u and v values are specified by umin,umax and vmin, vmax, and the number of divisions by uDIV and vDIV.\n\nFor a constant opacity, implement falpha(u,v){return const_value;}."},
     // IMAGES/SURFACES
     {"s2surp", s2plot_s2surp, METH_VARARGS,"s2surp(data, nx, ny, i1, i2, j1, j2, datamin, datamax,  tr)\n\nDraw a colour surface representation of the 2-dimensional numpy-array, data, containing nx * ny values. A sub-section only of the array is drawn, viz. data[i1:i2][j1:j2]. Data values <= datamin  are mapped to the first colour in the colour map (see s2scir), while values >= datamax are mapped to the last entry in the colour map. The mapping is linear at this stage. The final argument, tr, defines the transformation of the data cell locations to world coordinates in the X-Y space, and the transformation of data values to the Z ordinate, as follows:\n\n    x = tr[0] + tr[1] * i + tr[2] * j\n    y = tr[3] + tr[4] * i + tr[5] * j\n    z = tr[6] + tr[7] * dataval"},
     {"s2surpa", s2plot_s2surpa, METH_VARARGS,"s2surpa(data, nx, ny, i1, i2, j1, j2, datamin, datamax, tr)\n\nDraw a colour surface representation of the 2-dimensional numpy-array, data, containing nx * ny values. A sub-section only of the array is drawn, viz. data[i1:i2][j1:j2]. Data values <= datamin are mapped to the first colour in the colour map (see s2scir), while values >= datamax  are mapped to the last entry in the colour map. The mapping is linear at this stage. This function differs to the simpler s2surp in that the tranformation array provides an arbitrary transform, allowing the surface plot to be placed anywhere in the space oriented at any angle, etc. The transformation is as follows:\n\n    x = tr[0] + tr[1] * i + tr[2] * j + tr[3] * dataval\n    y = tr[4] + tr[5] * i + tr[6] * j + tr[7] * dataval\n    z = tr[8] + tr[9] * i + tr[10]* j + tr[11]* dataval"},
@@ -1368,6 +1369,8 @@ static PyObject *pyParametric_fx = NULL;
 static PyObject *pyParametric_fy = NULL;
 static PyObject *pyParametric_fz = NULL;
 static PyObject *pyParametric_fc = NULL;
+static PyObject *pyParametric_fa = NULL;
+
 float cParametricFunctions_fx(float *t){
     float result;
     PyObject *arg, *pyResult;
@@ -1771,6 +1774,67 @@ static PyObject *s2plot_s2funuv(PyObject *self, PyObject *args){
     Py_INCREF(Py_None);
     return Py_None;
 }
+
+float cParametricSurface_fa(float *u, float *v){
+    float result;
+    PyObject *arg, *pyResult;
+
+    arg = Py_BuildValue("ff", *u, *v);
+
+    pyResult = PyEval_CallObject(pyParametric_fa, arg);
+    Py_DECREF(arg);
+
+    // errors?
+    if(pyResult == NULL){
+        return 0;
+    }
+    result = (float) PyFloat_AsDouble(pyResult);
+    Py_XDECREF(pyResult);
+
+    return result;
+}
+
+static PyObject *s2plot_s2funuva(PyObject *self, PyObject *args){
+    int uDIV, vDIV;
+    float umin, umax, vmin, vmax;
+    PyObject *tempX, *tempY, *tempZ, *tempC, *tempA;
+    char *trans;
+
+    if(!PyArg_ParseTuple(args, "OOOOsOffiffi:s2funuva", &tempX, &tempY, &tempZ, &tempC, &trans, &tempA,
+                         &umin, &umax, &uDIV, &vmin, &vmax, &vDIV)) {
+        return NULL;
+    }
+    if (!PyCallable_Check(tempX) || !PyCallable_Check(tempY) || !PyCallable_Check(tempZ) || !PyCallable_Check(tempC)
+        || !PyCallable_Check(tempA)) {
+        PyErr_SetString(PyExc_TypeError, "parameters must be callable");
+        return NULL;
+    }
+
+    // store a reference to the new callback
+    Py_XINCREF(tempX);
+    Py_XINCREF(tempY);
+    Py_XINCREF(tempZ);
+    Py_XINCREF(tempC);
+    Py_XINCREF(tempA);
+    Py_XDECREF(pyParametric_fx);
+    Py_XDECREF(pyParametric_fy);
+    Py_XDECREF(pyParametric_fz);
+    Py_XDECREF(pyParametric_fc);
+    Py_XDECREF(pyParametric_fa);
+    
+    pyParametric_fx = tempX;
+    pyParametric_fy = tempY;
+    pyParametric_fz = tempZ;
+    pyParametric_fc = tempC;
+    pyParametric_fa = tempA;
+
+    s2funuva(cParametricSurface_fx, cParametricSurface_fy, cParametricSurface_fz, cParametricSurface_fc, trans[0],
+             cParametricSurface_fa, umin, umax, uDIV, vmin, vmax, vDIV);
+
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 // IMAGES/SURFACES
 static PyObject *s2plot_s2surp(PyObject *self, PyObject *args){
 
@@ -2656,8 +2720,8 @@ static PyObject *s2plot_ns2vf4nc(PyObject *self, PyObject *args){
     P = (XYZ *) calloc(4, sizeof(XYZ));
     N = (XYZ *) calloc(4, sizeof(XYZ));
     col = (COLOUR *) calloc(4, sizeof(COLOUR));
-    for(i = 0; i < 4; i++){
-        P[i] = Dict_to_XYZ(PyList_GetItem(PIn, i));
+    for(i = 0; i < 4; i++){ 
+       P[i] = Dict_to_XYZ(PyList_GetItem(PIn, i));
         N[i] = Dict_to_XYZ(PyList_GetItem(NIn, i));
         col[i] = Dict_to_COLOUR(PyList_GetItem(colIn, i));
     }
