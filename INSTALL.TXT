@@ -1,0 +1,156 @@
+# INSTALL.TXT
+#
+# Copyright 2008 Swinburne University of Technology.
+#
+# This file is part of the S2PLOT Python module.
+#
+# The S2PLOT Python module is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.  
+#
+# The S2PLOT Python module is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the S2PLOT Python module.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+# We would appreciate it if research outcomes using S2PLOT would
+# provide the following acknowledgement:
+#
+# "Three-dimensional visualisation was conducted with the S2PLOT
+# progamming library"
+#
+# and a reference to 
+#
+# D.G.Barnes, C.J.Fluke, P.D.Bourke & O.T.Parry, 2006, Publications
+# of the Astronomical Society of Australia, 23(2), 82-93.
+#
+# original version: David Barnes, December 2007.
+
+
+1. INTRODUCTION
+^^^^^^^^^^^^^^^
+
+This is a Python module which provides an interface to the S2PLOT 
+graphics programming library.
+
+S2PLOT is an advanced three-dimensional plotting library with support
+for standard and enhanced display devices.  Further information about
+S2PLOT, including downloads of the latest version, can be found at the
+S2PLOT website:
+
+http://astronomy.swin.edu.au/s2plot
+
+The S2PLOT Python module is supplied in source code format.
+
+
+2. PREREQUISITES
+^^^^^^^^^^^^^^^^
+
+2A. A working installation of S2PLOT version 2.x is required.  
+
+2B. The S2PLOT Python module is known to work with the following 
+    S2PLOT architectures:
+
+    linux-gnu-x86_64
+    linux-gnu-i386
+    darwin-gnu-i386
+    darwin-gnu-ppc
+
+    The S2PLOT Python module has *not* been built or tested on the
+    cygwin-gnu-i386 architecture.
+
+2C. Building the S2PLOT Python module requires a C compiler.  The 
+    C compiler that your S2PLOT installations uses should work.
+
+2D. The S2PLOT Python module requires Python (obviously) and the 
+    NumPy package.  NumPy can be obtained from 
+
+    http://numpy.scipy.org
+
+    or installed from OS-specific packages.
+
+    The S2PLOT Python module is known to work with Python version 
+    2.5.1 and NumPy version 1.0.4.  Your mileage may vary with other
+    versions.
+
+
+3. INSTALLATION
+^^^^^^^^^^^^^^^
+
+You should have received this file as part of a gzipped tar file named
+according to the following pattern:
+
+  py2plot-A.B.tar.gz,
+
+where:
+
+  * A is the major version
+  * B is the minor version
+
+Unzipping (using gunzip or zcat) and untarring the distribution file
+will produce a directory named by the pattern py2plot-A.B, containing
+the S2PLOT Python module source code and documentation.
+
+After uncompressing the distribution, check that your S2PATH and S2ARCH
+environment variables are set correctly, then:
+
+3A. Enter the directory (replace A, B with their appropriate values):
+    cd py2plot-A.B
+
+3B. Build the S2PLOT Python module:
+    python setup.py build
+
+    Common problems at this point include:
+    * wrong version of python: you probably require version >= 2.5.1;
+    * no NumPy installation, or NumPy not found: ensure you have 
+        installed NumPy, and can "import numpy" from within python.
+    * S2PATH or S2ARCH not set: these may be prompted for if not set, 
+        but you are better off setting them explicitly in your env.
+
+3C. Install the S2PLOT Python module:
+    python setup.py install [--home=/path/to/python-module-install/location]
+
+    By default, "python setup.py install" will attempt to install the 
+    S2PLOT Python module in the standard, system-wide location for 
+    Python modules.  If you prefer to install the S2PLOT Python module
+    somewhere else, use the --home argument.  You may then use the 
+    PYTHONPATH environment variable, or the sys.path.append python 
+    function, to make sure the S2PLOT Python module is available to 
+    Python.
+
+3D. Check you can import the S2PLOT Python module by starting Python
+    and executing "import s2plot".  A successful module load is 
+    accompanied by no error messages, and a return to the Python prompt
+    (normally ">>>").
+
+    Common problems at this point include:
+    * S2PLOT Python module not found: check your PYTHONPATH environment
+        variable, or use the sys.path.append python function to help
+        python find your module.
+    * Wrong version of Python (see above).
+
+
+4. TESTING
+^^^^^^^^^^
+
+You should now be able to run any of the examples in the "examples" 
+sub-directory of the distribution.  Eg.
+
+cd examples
+python2.5 s2skypa.py
+
+
+5. CLOSING
+^^^^^^^^^^
+
+Thanks for giving the S2PLOT Python module a go!  Hopefully you
+managed to get it working and you find it a useful module.  We look
+forward to bringing you new and exciting S2PLOT features in the
+future.
+
+ - David Barnes & Nick Jones, January 2008.
