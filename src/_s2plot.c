@@ -2352,11 +2352,11 @@ static PyObject *s2plot_ns2vi(PyObject *self, PyObject *args){
 }
 static PyObject *s2plot_ns2line(PyObject *self, PyObject *args){
     float x1, y1, z1, x2, y2, z2, r, g, b;
-    
-    if(!PyArg_ParseTuple(args, "fffffffff:ns2line", &x1, &y2, &z1, &x2, &y2, &z2, &r, &g, &b)){
+
+    if(!PyArg_ParseTuple(args, "fffffffff:ns2line", &x1, &y1, &z1, &x2, &y2, &z2, &r, &g, &b)){
         return NULL;
     }
-    
+
     ns2line(x1, y1, z1, x2, y2, z2, r, g, b);
     
     Py_INCREF(Py_None);
