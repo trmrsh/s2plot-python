@@ -2636,11 +2636,11 @@ static PyObject *s2plot_ns2vf4(PyObject *self, PyObject *args){
         P[i] = Dict_to_XYZ(PyList_GetItem(PIn, i));
     }
     col = Dict_to_COLOUR(colIn);
-    
+
     ns2vf4(P, col);
-    
+
     free(P);
-    
+
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -2650,14 +2650,14 @@ static PyObject *s2plot_ns2vf4n(PyObject *self, PyObject *args){
     PyObject *PIn, *NIn, *colIn;
     int i;
 
-    if(!PyArg_ParseTuple(args, "OOO:ns2vf4n", &PIn, *NIn, &colIn) || NULL == PIn || NULL == NIn || NULL == colIn){
+    if(!PyArg_ParseTuple(args, "OOO:ns2vf4n", &PIn, &NIn, &colIn) || NULL == PIn || NULL == NIn || NULL == colIn){
         return NULL;
     }
     if(PyList_Size(PIn) != 3 || PyList_Size(NIn) != 3){
         PyErr_SetString(PyExc_IndexError, "vertices must be a list of 4 dictionaries of {x,y,z}");
         return NULL;
     }
-    
+
     P = (XYZ *) calloc(4, sizeof(XYZ));
     N = (XYZ *) calloc(4, sizeof(XYZ));
     for(i = 0; i < 4; i++){
@@ -2665,12 +2665,12 @@ static PyObject *s2plot_ns2vf4n(PyObject *self, PyObject *args){
         N[i] = Dict_to_XYZ(PyList_GetItem(NIn, i));
     }
     col = Dict_to_COLOUR(colIn);
-    
+
     ns2vf4n(P, N, col);
-    
+
     free(P);
     free(N);
-    
+
     Py_INCREF(Py_None);
     return Py_None;
 }
