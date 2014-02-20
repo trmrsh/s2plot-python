@@ -705,7 +705,7 @@ static PyObject *s2plot_s2line(PyObject *self, PyObject *args){
     int symbol;
     
     // parse the args into numpy array objects
-    if(!PyArg_ParseTuple(args,"iO!O!O!:s2line",&n,&PyArray_Type,&xIn,&PyArray_Type,&yIn,&PyArray_Type,&zIn,&symbol) || NULL == &xIn || NULL == &yIn || NULL == &zIn){
+    if(!PyArg_ParseTuple(args,"iO!O!O!:s2line",&n,&PyArray_Type,&xIn,&PyArray_Type,&yIn,&PyArray_Type,&zIn,&symbol) || !xIn || !yIn || !zIn){
         return NULL;
     }
     if(!(xPts = numpy1D_to_float(xIn))) return NULL;
@@ -875,7 +875,7 @@ static PyObject *s2plot_s2pt(PyObject *self, PyObject *args){
     int symbol;
     
     // parse the args into numpy array objects
-    if(!PyArg_ParseTuple(args,"iO!O!O!i:s2pt",&N,&PyArray_Type,&xIn,&PyArray_Type,&yIn,&PyArray_Type,&zIn,&symbol) || NULL == &xIn || NULL == &yIn || NULL == &zIn){
+    if(!PyArg_ParseTuple(args,"iO!O!O!i:s2pt",&N,&PyArray_Type,&xIn,&PyArray_Type,&yIn,&PyArray_Type,&zIn,&symbol) || !xIn || !yIn || !zIn){
         return NULL;
     }
     if(!(xCoord = numpy1D_to_float(xIn))) return NULL;
@@ -897,7 +897,7 @@ static PyObject *s2plot_s2pnts(PyObject *self, PyObject *args){
     float *xPts, *yPts, *zPts;
     
     // parse the args into numpy array objects
-    if(!PyArg_ParseTuple(args,"iO!O!O!O!i:s2pnts", &np, &PyArray_Type, &xIn, &PyArray_Type, &yIn, &PyArray_Type, &zIn, &PyArray_Type, &symbolsIn, &ns) || NULL == &xIn || NULL == &yIn || NULL == &zIn || NULL == &symbolsIn){
+    if(!PyArg_ParseTuple(args,"iO!O!O!O!i:s2pnts", &np, &PyArray_Type, &xIn, &PyArray_Type, &yIn, &PyArray_Type, &zIn, &PyArray_Type, &symbolsIn, &ns) || !xIn || !yIn || !zIn || !symbolsIn){
         return NULL;
     }
     if(!(xPts = numpy1D_to_float(xIn))) return NULL;
@@ -1844,7 +1844,7 @@ static PyObject *s2plot_s2surp(PyObject *self, PyObject *args){
     float dataRange[2];
     
     // parse the python into C
-    if(!PyArg_ParseTuple(args, "O!iiiiiiffO!:s2surp", &PyArray_Type, &dataObject, &n[0], &n[1], &i[0], &i[1], &j[0], &j[1], &dataRange[0], &dataRange[1], &PyArray_Type, &trIn) || NULL == &dataObject || NULL == &trIn){
+    if(!PyArg_ParseTuple(args, "O!iiiiiiffO!:s2surp", &PyArray_Type, &dataObject, &n[0], &n[1], &i[0], &i[1], &j[0], &j[1], &dataRange[0], &dataRange[1], &PyArray_Type, &trIn) || !dataObject || !trIn){
         return NULL;
     }
     
@@ -1867,7 +1867,7 @@ static PyObject *s2plot_s2surpa(PyObject *self, PyObject *args){
     float dataRange[2];
     
     // parse the python into C
-    if(!PyArg_ParseTuple(args, "O!iiiiiiffO!:s2surpa", &PyArray_Type, &dataObject, &n[0], &n[1], &i[0], &i[1], &j[0], &j[1], &dataRange[0], &dataRange[1], &PyArray_Type, &trIn) || NULL == &dataObject || NULL == &trIn){
+    if(!PyArg_ParseTuple(args, "O!iiiiiiffO!:s2surpa", &PyArray_Type, &dataObject, &n[0], &n[1], &i[0], &i[1], &j[0], &j[1], &dataRange[0], &dataRange[1], &PyArray_Type, &trIn) || !dataObject || !trIn){
         return NULL;
     }
     
@@ -1928,7 +1928,7 @@ static PyObject *s2plot_s2vect3(PyObject *self, PyObject *args){
     int colbylength;
     
     // parse the args into numpy array objects
-    if(!PyArg_ParseTuple(args,"O!O!O!iiiiiiiiifiO!fiff:s2vect3", &PyArray_Type, &aIn, &PyArray_Type, &bIn, &PyArray_Type, &cIn, &adim, &bdim, &cdim, &a1, &a2, &b1, &b2, &c1, &c2, &scale, &nc, &PyArray_Type, &trIn, &minlength, &colbylength, &minl, &maxl) || NULL == &aIn || NULL == &bIn || NULL == &cIn || NULL == &trIn){
+    if(!PyArg_ParseTuple(args,"O!O!O!iiiiiiiiifiO!fiff:s2vect3", &PyArray_Type, &aIn, &PyArray_Type, &bIn, &PyArray_Type, &cIn, &adim, &bdim, &cdim, &a1, &a2, &b1, &b2, &c1, &c2, &scale, &nc, &PyArray_Type, &trIn, &minlength, &colbylength, &minl, &maxl) || !aIn || !bIn || !cIn || !trIn){
         return NULL;
     }
     if(!(a = numpy3D_to_float(aIn))) {return NULL;}
@@ -3926,7 +3926,7 @@ static PyObject *s2plot_ns2cis(PyObject *self, PyObject *args){
     PyObject *result;
     
     // parse the args into numpy array objects
-    if(!PyArg_ParseTuple(args,"O!iiiiiiiiiOfisffff:ns2cis", &PyArray_Type, &gridIn, &adim, &bdim, &cdim, &a1, &a2, &b1, &b2, &c1, &c2, &trIn, &level, &resolution, &trans, &alpha, &red, &green, &blue) || NULL == &gridIn || NULL == &trIn){
+    if(!PyArg_ParseTuple(args,"O!iiiiiiiiiOfisffff:ns2cis", &PyArray_Type, &gridIn, &adim, &bdim, &cdim, &a1, &a2, &b1, &b2, &c1, &c2, &trIn, &level, &resolution, &trans, &alpha, &red, &green, &blue) || !gridIn || !trIn){
         return NULL;
     }
     if(!(grid = numpy3D_to_float(gridIn))) {return NULL;}
@@ -3975,7 +3975,7 @@ static PyObject *s2plot_ns2cisc(PyObject *self, PyObject *args){
     PyObject *result, *tempColCall;
     
     // parse the args into numpy array objects
-    if(!PyArg_ParseTuple(args,"O!iiiiiiiiiOfisfO:ns2cisc", &PyArray_Type, &gridIn, &adim, &bdim, &cdim, &a1, &a2, &b1, &b2, &c1, &c2, &trIn, &level, &resolution, &trans, &alpha, &tempColCall) || NULL == &gridIn || NULL == &trIn || NULL == &tempColCall){
+    if(!PyArg_ParseTuple(args,"O!iiiiiiiiiOfisfO:ns2cisc", &PyArray_Type, &gridIn, &adim, &bdim, &cdim, &a1, &a2, &b1, &b2, &c1, &c2, &trIn, &level, &resolution, &trans, &alpha, &tempColCall) || !gridIn || !trIn || !tempColCall){
         return NULL;
     }
     if (!PyCallable_Check(tempColCall)) {
@@ -4076,7 +4076,7 @@ static PyObject *s2plot_ns2cvr(PyObject *self, PyObject *args){
     PyObject *result;
     
     // parse the args into numpy array objects
-    if(!PyArg_ParseTuple(args,"O!iiiiiiiiiOsffff:ns2cvr", &PyArray_Type, &gridIn, &adim, &bdim, &cdim, &a1, &a2, &b1, &b2, &c1, &c2, &trIn, &trans, &datamin, &datamax, &alphamin, &alphamax) || NULL == &gridIn || NULL == &trIn){
+    if(!PyArg_ParseTuple(args,"O!iiiiiiiiiOsffff:ns2cvr", &PyArray_Type, &gridIn, &adim, &bdim, &cdim, &a1, &a2, &b1, &b2, &c1, &c2, &trIn, &trans, &datamin, &datamax, &alphamin, &alphamax) || !gridIn || !trIn){
         return NULL;
     }
     if(!(grid = numpy3D_to_float(gridIn))) {return NULL;}
@@ -4204,7 +4204,7 @@ static PyObject *s2plot_s2skypa(PyObject *self, PyObject *args){
     float dataRange[2];
     
     // parse the python into C
-    if(!PyArg_ParseTuple(args, "O!iiiiiiffO!iii:s2skypa", &PyArray_Type, &dataObject, &n[0], &n[1], &i[0], &i[1], &j[0], &j[1], &dataRange[0], &dataRange[1], &PyArray_Type, &trIn, &walls, &idx_left, &idx_front) || NULL == &dataObject || NULL == &trIn){
+    if(!PyArg_ParseTuple(args, "O!iiiiiiffO!iii:s2skypa", &PyArray_Type, &dataObject, &n[0], &n[1], &i[0], &i[1], &j[0], &j[1], &dataRange[0], &dataRange[1], &PyArray_Type, &trIn, &walls, &idx_left, &idx_front) || !dataObject || !trIn){
         return NULL;
     }
     
@@ -4226,7 +4226,7 @@ static PyObject *s2plot_s2impa(PyObject *self, PyObject *args){
     float dataRange[2];
     
     // parse the python into C
-    if(!PyArg_ParseTuple(args, "O!iiiiiiffO!ii:s2impa", &PyArray_Type, &dataObject, &n[0], &n[1], &i[0], &i[1], &j[0], &j[1], &dataRange[0], &dataRange[1], &PyArray_Type, &trIn, &trunk, &symbol) || NULL == &dataObject || NULL == &trIn){
+    if(!PyArg_ParseTuple(args, "O!iiiiiiffO!ii:s2impa", &PyArray_Type, &dataObject, &n[0], &n[1], &i[0], &i[1], &j[0], &j[1], &dataRange[0], &dataRange[1], &PyArray_Type, &trIn, &trunk, &symbol) || !dataObject || !trIn){
         return NULL;
     }
     
