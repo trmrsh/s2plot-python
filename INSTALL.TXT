@@ -82,49 +82,35 @@ The S2PLOT Python module is supplied in source code format.
 3. INSTALLATION
 ^^^^^^^^^^^^^^^
 
-You should have received this file as part of a gzipped tar file named
-according to the following pattern:
+You should have received this file from cloning or downloading s2plot-python
+from github.
 
-  py2plot-A.B.tar.gz,
+First of all check that your S2PATH and S2ARCH environment variables are
+set correctly, then:
 
-where:
-
-  * A is the major version
-  * B is the minor version
-
-Unzipping (using gunzip or zcat) and untarring the distribution file
-will produce a directory named by the pattern py2plot-A.B, containing
-the S2PLOT Python module source code and documentation.
-
-After uncompressing the distribution, check that your S2PATH and S2ARCH
-environment variables are set correctly, then:
-
-3A. Enter the directory (replace A, B with their appropriate values):
-    cd py2plot-A.B
-
-3B. Build the S2PLOT Python module:
+3A. Build the S2PLOT Python module:
     python setup.py build
 
     Common problems at this point include:
     * wrong version of python: you probably require version >= 2.5.1;
-    * no NumPy installation, or NumPy not found: ensure you have 
+    * no NumPy installation, or NumPy not found: ensure you have
         installed NumPy, and can "import numpy" from within python.
-    * S2PATH or S2ARCH not set: these may be prompted for if not set, 
+    * S2PATH or S2ARCH not set: these may be prompted for if not set,
         but you are better off setting them explicitly in your env.
 
-3C. Install the S2PLOT Python module:
+3B. Install the S2PLOT Python module:
     python setup.py install [--home=/path/to/python-module-install/location]
 
-    By default, "python setup.py install" will attempt to install the 
-    S2PLOT Python module in the standard, system-wide location for 
+    By default, "python setup.py install" will attempt to install the
+    S2PLOT Python module in the standard, system-wide location for
     Python modules.  If you prefer to install the S2PLOT Python module
-    somewhere else, use the --home argument.  You may then use the 
-    PYTHONPATH environment variable, or the sys.path.append python 
-    function, to make sure the S2PLOT Python module is available to 
+    somewhere else, use the --home argument.  You may then use the
+    PYTHONPATH environment variable, or the sys.path.append python
+    function, to make sure the S2PLOT Python module is available to
     Python.
 
 3D. Check you can import the S2PLOT Python module by starting Python
-    and executing "import s2plot".  A successful module load is 
+    and executing "import s2plot".  A successful module load is
     accompanied by no error messages, and a return to the Python prompt
     (normally ">>>").
 
@@ -134,18 +120,41 @@ environment variables are set correctly, then:
         python find your module.
     * Wrong version of Python (see above).
 
+4. PRC / PDF module
+^^^^^^^^^^^^^^^^^^^
 
-4. TESTING
+s2plot-3.2.1 enables embedding of 3D graphics within PDF. As of Feb 2014, this
+does not work immediately from Python. The reason seems to be that it requires
+extra libraries to be linked at the time the PRC writer module is made, not
+when the s2plot Python extension module is built. It is easy to check if you
+have this problem. Start any of the example scripts, e.g. 'python
+examples/s2funt.py', and hit shift-P. If you have the problem, it will be
+obvious from the output. A fix is provided within this package in the form of
+a modified version of the script that builds the prc module. This is called
+build-prc-module.csh and should be in the same directory as this file. If you
+want to use the PRC facility from within Python, carry out the following three
+steps (starting from the cwd):
+
+ cp build-prc-module.csh ${S2PATH}/scripts/.
+ cd ${S2PATH}
+ ./scripts/build-prc-module.csh
+
+The modified version of build-prc-module.csh adds in libraries that the module
+needs. It has been tested for linux only and needs generalising for
+darwin. The fix for Python leaves the C-programs OK. No other re-building is
+required since the PRC writer module is loaded dynamically when it is needed.
+
+5. TESTING
 ^^^^^^^^^^
 
-You should now be able to run any of the examples in the "examples" 
+You should now be able to run any of the examples in the "examples"
 sub-directory of the distribution.  Eg.
 
 cd examples
 python2.5 s2skypa.py
 
 
-5. CLOSING
+6. CLOSING
 ^^^^^^^^^^
 
 Thanks for giving the S2PLOT Python module a go!  Hopefully you
@@ -154,3 +163,4 @@ forward to bringing you new and exciting S2PLOT features in the
 future.
 
  - David Barnes & Nick Jones, January 2008.
+ - Tom Marsh, February 2014
