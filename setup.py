@@ -46,19 +46,20 @@ def main():
         print "S2PLOT requires the NUMPY package.  Unable to load numpy."
         return -1
     includeDirs = get_numpy_include_dirs()
-    
+
     if 'linux' in sys.platform.lower():
         dylibType = 'LD_LIBRARY_PATH'
         dylibExt = '.so'
-        libraries.extend(['s2winglut', 's2dispstub', 's2meshstub', 'glut', 'GLU', 'GL'])
+        libraries.extend(['s2freetype', 's2dispfg', 's2freemesh', 's2winglut',
+                          'glut', 'GLU', 'GL', 'freetype'])
     elif 'darwin' in sys.platform.lower():
         dylibType = 'DYLD_LIBRARY_PATH'
         dylibExt = '.dylib'
-        libraries.extend(['s2meshstub', 's2winglut'])
+        libraries.extend(['s2freetype', 's2meshstub', 's2winglut'])
     else:
         print "Platform %s unsupported.  Exiting."
         return -1
-    
+
     if any([cmd in ['install','build','build_ext'] for cmd in sys.argv]):
         # if we can't guess that s2plot is accounted for...
         # determine the s2plot environment
@@ -83,14 +84,19 @@ def main():
     else:
         print "To run the s2plot module, ensure that the s2plot libraries are installed and are in your dynamic library paths."
         print "You may need to set %s to point to your s2plot library directories." % dylibType
-    
-    
+
+    print libPath, libraries
+
     s2plot_ext = Extension('_s2plot',
-        sources = [os.path.join('src','_s2plot.c')],
-        include_dirs = includeDirs,
-        libraries = libraries,
-        library_dirs = libPath)
-    
+                           undef_macros    = ['USE_NUMARRAY'],
+                           sources = [os.path.join('src','_s2plot.c')],
+                           include_dirs = includeDirs,
+                           libraries = libraries,
+                           library_dirs = libPath,
+                           runtime_library_dirs = libPath,
+                           extra_compile_args=['-ftree-vectorize', '-fopenmp'],
+                           )
+
     setup(name = 's2plot-python',
             url = 'http://astronomy.swin.edu.au/s2plot/',
             author = 'Nicholas Jones',

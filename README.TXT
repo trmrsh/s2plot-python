@@ -38,4 +38,5 @@ To get started quickly, follow 'INSTALL.TXT'.
 
  - David Barnes & Nick Jones, January 2008.
 
-This was brought under git version control by Tom Marsh in February 2014.
+This was brought under git version control by Tom Marsh, University of
+WArwick in February 2014.
