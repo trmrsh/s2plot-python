@@ -101,7 +101,7 @@ def main():
             url = 'http://astronomy.swin.edu.au/s2plot/',
             author = 'Nicholas Jones',
             author_email = 'njones@astro.swin.edu.au',
-            version = '0.4',
+            version = '0.9',
             description = 'A python wrapper of the s2plot 3D stereo plotting library',
             platforms = ['any'],
             license = 'http://www.gnu.org/copyleft/gpl.html',
