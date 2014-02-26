@@ -7,7 +7,7 @@
  * The S2PLOT Python module is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of
- * the License, or (at your option) any later version.  
+ * the License, or (at your option) any later version.
  *
  * The S2PLOT Python module is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
@@ -24,7 +24,7 @@
  * "Three-dimensional visualisation was conducted with the S2PLOT
  * progamming library"
  *
- * and a reference to 
+ * and a reference to
  *
  * D.G.Barnes, C.J.Fluke, P.D.Bourke & O.T.Parry, 2006, Publications
  * of the Astronomical Society of Australia, 23(2), 82-93.
@@ -212,7 +212,7 @@ static PyMethodDef S2PlotMethods[] = {
     {"ss2sas", s2plot_ss2sas, METH_VARARGS, "ss2sas(startstop)\n\nStart (startstop = 1) or stop (startstop = 0) the camera rotation."},
     {"ss2scf", s2plot_ss2scf, METH_VARARGS, "ss2scf(position, worldcoords)\n\nSet the camera mid/focus point. If this is set, then rotation will be about the provided point (position, an {xyz} dict). Use ss2ucf to revert to \"auto\" mid point. If worldcoords > 0 then caller has given world coordinates, otherwise they are viewport-relative coordinates."},
     {"ss2ucf", s2plot_ss2ucf, METH_VARARGS, "ss2ucf()\n\nReset the camera mid/focus point so that an automatic mid-point is calculated. To set the focus manually, use ss2scf."},
-    {"ss2sca", s2plot_ss2sca, METH_VARARGS, "ss2sca(aperture)\n\nSet the camera apaerture in degrees."}, /* NEW */
+    {"ss2sca", s2plot_ss2sca, METH_VARARGS, "ss2sca(aperture)\n\nSet the camera aperture in degrees."}, /* NEW */
     {"ss2qca", s2plot_ss2qca, METH_VARARGS, "ss2qca()\n\nReturn the camera aperture in degrees."}, /* NEW */
     {"ss2sss", s2plot_ss2sss, METH_VARARGS, "ss2sss(spd)\n\nSet the spin/interaction speed to spd. Values between 0.01 and 20.0 are reasonably sensible."},
     {"ss2qss", s2plot_ss2qss, METH_VARARGS, "ss2qss()\n\nGet the current spin/interaction speed."},
@@ -3664,32 +3664,30 @@ static PyObject *s2plot_ss2scf(PyObject *self, PyObject *args){
     int worldcoords;
     PyObject *positionIn;
     
-    if(!PyArg_ParseTuple(args, "Oi:ss2scf", &positionIn, &worldcoords) || NULL == positionIn){
+    if(!PyArg_ParseTuple(args, "Oi:ss2scf", &positionIn, &worldcoords) ||
+       !positionIn)
         return NULL;
-    }
-    
+
     position = Dict_to_XYZ(positionIn);
-    
+
     ss2scf(position, worldcoords);
-    
+
     Py_INCREF(Py_None);
     return Py_None;
 }
 static PyObject *s2plot_ss2ucf(PyObject *self, PyObject *args){
     ss2ucf();
-    
+
     Py_INCREF(Py_None);
     return Py_None;
 }
 static PyObject *s2plot_ss2sca(PyObject *self, PyObject *args){ /* NEW */
     float aperture;
-    
-    if(!PyArg_ParseTuple(args, "f:ss2sca", &aperture)){
-        return NULL;
-    }
-    
+
+    if(!PyArg_ParseTuple(args, "f:ss2sca", &aperture))
+      return NULL;
     ss2sca(aperture);
-    
+
     Py_INCREF(Py_None);
     return Py_None;
 }
@@ -3779,14 +3777,19 @@ static PyObject *s2plot_s2chromapts(PyObject *self, PyObject *args){
     int n;
     float *ilong, *lat, *dist, *size, radius, dmin, dmax;
     PyArrayObject *ilongIn, *latIn, *distIn, *sizeIn;
-    
+
     // parse the args into numpy array objects
-    if(!PyArg_ParseTuple(args,"iO!O!O!O!fff:s2chromapts",&n, &PyArray_Type, &ilongIn, &PyArray_Type, &latIn, &PyArray_Type, &distIn, &PyArray_Type, &sizeIn, &radius, &dmin, &dmax) || NULL == ilongIn || NULL == latIn || NULL == distIn || NULL == sizeIn){
-        return NULL;
-    }
+    if(!PyArg_ParseTuple(args,"iO!O!O!O!fff:s2chromapts",&n, &PyArray_Type,
+                         &ilongIn, &PyArray_Type, &latIn, &PyArray_Type,
+                         &distIn, &PyArray_Type, &sizeIn, &radius, &dmin, 
+                         &dmax) || !ilongIn || !latIn || !distIn || !sizeIn)
+      return NULL;
+
 
     if(!(ilong = numpy1D_to_float(ilongIn))) {return NULL;}
-    if(!(lat = numpy1D_to_float(latIn))) {numpy_free(ilongIn, ilong); return NULL;}
+    if(!(lat = numpy1D_to_float(latIn)))
+      numpy_free(ilongIn, ilong); return NULL;
+
     if(!(dist = numpy1D_to_float(distIn))){
         numpy_free(ilongIn, ilongIn);
         numpy_free(latIn, lat);
